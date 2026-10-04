@@ -4,7 +4,7 @@
   // ====== CAMBIA QUI ======
   const CONFIG = {
     code: "RJFG-XHNF-XMEQ", // il codice che compare alla fine
-    points: 5000,            // i FC Points mostrati nel contatore
+    points: 5900,            // i FC Points mostrati nel contatore
   };
   // ========================
 
@@ -12,7 +12,6 @@
   const intro = $("#intro");
   const video = $("#video");
   const playBtn = $("#play");
-  const soundBtn = $("#sound");
   const stage = $("#reveal");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -20,39 +19,20 @@
 
   /* ---------- 1. Video ---------- */
 
-  // Prova con l'audio; se il browser lo blocca, parte muto con "tocca per l'audio";
-  // se blocca anche quello (es. iPhone in risparmio energetico), mostra il tasto play.
-  async function startVideo() {
-    if (video.error) return reveal(); // fallito prima che lo script partisse
-    video.muted = false;
-    try { await video.play(); return; } catch (e) { if (broken(e)) return reveal(); }
-    video.muted = true;
-    try {
-      await video.play();
-      soundBtn.hidden = false;
-    } catch (e) {
-      if (broken(e)) return reveal();
-      playBtn.hidden = false;
-    }
-  }
+  // Il video parte con un tocco, così parte con l'audio su ogni telefono.
+  // Lo stesso tocco sblocca anche la canzone del reveal.
+  let started = false;
 
-  // Il video non c'è o non si legge: niente tasto play, si va al reveal.
-  const broken = (e) => revealed || video.error || e?.name === "NotSupportedError";
-
-  function unmute() {
-    video.muted = false;
-    soundBtn.hidden = true;
-    primeMusic();
-  }
-
-  playBtn.addEventListener("click", () => {
+  function startVideo() {
+    if (started || revealed) return;
+    started = true;
     playBtn.hidden = true;
     video.muted = false;
     video.play().catch(reveal);
     primeMusic();
-  });
-  soundBtn.addEventListener("click", unmute);
-  video.addEventListener("click", unmute);
+  }
+
+  intro.addEventListener("click", startVideo);
   video.addEventListener("ended", reveal);
   video.addEventListener("error", reveal); // video mancante o rotto: si va dritti al reveal
 
@@ -62,17 +42,14 @@
   const musicBtn = $("#music-btn");
   let primed = false;
 
-  // I telefoni fanno partire l'audio solo dopo un tocco: un tocco durante il video
-  // fa partire e fermare subito la canzone (muta), così al reveal può suonare da sola.
+  // I telefoni fanno suonare l'audio solo dopo un tocco. Il tocco sul video la avvia e
+  // la ferma nello stesso istante (non suona niente): così a fine video parte da sola.
   function primeMusic() {
-    if (primed || revealed) return;
+    if (primed) return;
     primed = true;
-    music.muted = true;
-    music.play().then(() => {
-      if (revealed) return;
-      music.pause();
-      music.currentTime = 0;
-    }).catch(() => { primed = false; }).finally(() => { music.muted = false; });
+    const p = music.play();
+    music.pause();
+    p?.catch(() => {});
   }
 
   function playMusic() {
@@ -93,14 +70,14 @@
     playMusic().catch(() => {});
   });
 
-  startVideo();
+  if (video.error) reveal(); // fallito prima che lo script partisse
 
   /* ---------- 2. Reveal ---------- */
 
   async function reveal() {
     if (revealed) return;
     revealed = true;
-    playBtn.hidden = soundBtn.hidden = true;
+    playBtn.hidden = true;
     startMusic(); // subito, prima di ogni attesa
     await Promise.race([document.fonts.ready, wait(500)]);
 

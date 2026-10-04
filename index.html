@@ -43,13 +43,10 @@
 
   <!-- 1. Il video, e nient'altro -->
   <section id="intro" class="intro">
-    <video id="video" src="video.mp4" playsinline webkit-playsinline preload="auto" muted></video>
-    <button id="play" class="play" type="button" hidden aria-label="Avvia il video">
+    <!-- #t=0.001 fa vedere il primo fotogramma anche su iPhone -->
+    <video id="video" src="video.mp4#t=0.001" playsinline webkit-playsinline preload="auto"></video>
+    <button id="play" class="play" type="button" aria-label="Avvia il video">
       <svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>
-    </button>
-    <button id="sound" class="sound" type="button" hidden>
-      <svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>
-      Tocca per l'audio
     </button>
   </section>
 
