@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>FC 27 Reward</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,800;1,800;1,900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Faccia della moneta, usata dalla moneta 3D -->
+  <svg class="defs" width="0" height="0" aria-hidden="true">
+    <defs>
+      <linearGradient id="g-rim" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#c8ffe4"/>
+        <stop offset=".35" stop-color="#2cf59e"/>
+        <stop offset=".7" stop-color="#00a85c"/>
+        <stop offset="1" stop-color="#003d22"/>
+      </linearGradient>
+      <linearGradient id="g-face" x1="1" y1="1" x2="0" y2="0">
+        <stop offset="0" stop-color="#00f08a"/>
+        <stop offset=".5" stop-color="#00c46e"/>
+        <stop offset="1" stop-color="#00813f"/>
+      </linearGradient>
+      <radialGradient id="g-shine" cx=".3" cy=".22" r=".65">
+        <stop offset="0" stop-color="#fff" stop-opacity=".6"/>
+        <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+      </radialGradient>
+      <symbol id="coin-face" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="99" fill="url(#g-rim)"/>
+        <circle cx="100" cy="100" r="80" fill="url(#g-face)" stroke="#004d2a" stroke-width="4"/>
+        <circle cx="100" cy="100" r="70" fill="none" stroke="#b4ffdc" stroke-opacity=".55" stroke-width="2.5" stroke-dasharray="1 7" stroke-linecap="round"/>
+        <text x="103" y="128" text-anchor="middle" font-family="Barlow Condensed, Impact, sans-serif" font-style="italic" font-weight="900" font-size="84" fill="#003a1f">FC</text>
+        <text x="100" y="124" text-anchor="middle" font-family="Barlow Condensed, Impact, sans-serif" font-style="italic" font-weight="900" font-size="84" fill="#eafff4">FC</text>
+        <circle cx="100" cy="100" r="99" fill="url(#g-shine)"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- 1. Il video, e nient'altro -->
+  <section id="intro" class="intro">
+    <video id="video" src="video.mp4" playsinline webkit-playsinline preload="auto" muted></video>
+    <button id="play" class="play" type="button" hidden aria-label="Avvia il video">
+      <svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>
+    </button>
+    <button id="sound" class="sound" type="button" hidden>
+      <svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>
+      Tocca per l'audio
+    </button>
+  </section>
+
+  <!-- 2. Il reveal -->
+  <main id="reveal" class="reveal" aria-hidden="true">
+    <div class="bg">
+      <div class="rays"></div>
+      <div class="glow"></div>
+      <div class="floor"></div>
+      <div class="vignette"></div>
+    </div>
+    <canvas id="fx"></canvas>
+    <div class="flash"></div>
+    <audio id="music" src="anthem.mp3" preload="auto" loop></audio>
+    <button id="music-btn" class="music-btn" type="button" hidden aria-label="Avvia la musica">
+      <svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>
+      Musica
+    </button>
+
+    <div class="content">
+      <header class="title">
+        <span class="kicker">FC 27 · ULTIMATE TEAM</span>
+        <h1><span>REWARD</span><span>SBLOCCATO</span></h1>
+      </header>
+
+      <div class="hero">
+        <div class="coin-stage">
+          <div class="coin">
+            <i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i>
+            <i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i>
+            <i style="--i:8"></i><i style="--i:9"></i><i style="--i:10"></i>
+            <svg class="front"><use href="#coin-face"/></svg>
+            <svg class="back"><use href="#coin-face"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="amount">
+        <span class="num">+<span id="count">0</span></span>
+        <span class="unit">FC POINTS</span>
+      </div>
+
+      <section class="card" aria-label="Il tuo codice">
+        <div class="card-inner">
+          <span class="label"><b></b>IL TUO CODICE</span>
+          <div id="code" class="code" role="button" tabindex="0" title="Tocca per copiare"></div>
+          <button id="copy" class="copy" type="button">Copia codice</button>
+          <span class="hint">Riscattalo subito in FC 27</span>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
